@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace HierarchyAPI.Models
 {
@@ -6,7 +7,8 @@ namespace HierarchyAPI.Models
     {
         public OrgaContext(DbContextOptions dbContextOptions):base(dbContextOptions)
         {
-
+            
         }
+        public DbSet<Role> roles { get; set; }
     }
 }
