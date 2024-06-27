@@ -46,7 +46,7 @@ namespace HierarchyAPI.Models
 
         public async Task<Role> GetSingle(Guid roleId)
         {
-            return _OrgaContext.roles.FirstOrDefault();
+            return _OrgaContext.roles.FirstOrDefault(r=>r.Id.Equals(roleId));
         }
 
 
