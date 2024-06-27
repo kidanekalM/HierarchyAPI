@@ -1,6 +1,7 @@
 ﻿using HierarchyAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Runtime.CompilerServices;
 
 namespace HierarchyAPI.Controllers
 {
@@ -26,6 +27,31 @@ namespace HierarchyAPI.Controllers
         [HttpDelete("Delete")]
         public async Task<ActionResult<Role>> Remove(Guid roleId)
         {
+            Role toDelte = await _roleRepository.GetSingle(roleId);
+            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
+            if ( ((Children).Count != 0))
+            {
+                foreach(var child in Children)
+                {
+                    child.ParentId = toDelte.ParentId;
+                    child.Parent = toDelte.Parent;
+                    _roleRepository.Update((Guid)child.Id,child);
+                }
+            }
+            return await _roleRepository.Remove(roleId);
+        }
+        [HttpDelete("DeleteRecursive")]
+        public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
+        {
+            Role toDelte = await _roleRepository.GetSingle(roleId);
+            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
+            if (((Children).Count != 0))
+            {
+                foreach (var child in Children)
+                {
+                    RemoveRecursive((Guid)child.Id);
+                }
+            }
             return await _roleRepository.Remove(roleId);
         }
         [HttpGet("GetAllChildren")]
@@ -46,16 +72,21 @@ namespace HierarchyAPI.Controllers
         [HttpGet("Tree")]
         public async Task<string> Tree(Guid roleId)
         {
-            string tree = "\n \n \n \n";
+            return await GenerateTree("", roleId);
+        }
+        [NonAction]
+        public async Task<string> GenerateTree(string spacing,Guid roleId)
+        {
+            string tree = "";
             tree += (await _roleRepository.GetSingle(roleId)).Name;
-            tree += "---------|";
-            foreach(var child in  await _roleRepository.GetAllChildren(roleId))
+            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
+            foreach(var child in Children)
             {
-                tree += "-----" + child.Name;
-                tree += "    | \n     | \n     | \n     | \n";
+                tree += "\n";
+                tree += spacing+ "├── ";
+                tree += await GenerateTree(spacing+ "│  ", (Guid)child.Id );
             }
-            tree += (await _roleRepository.GetAllChildren(roleId));
-            _roleRepository.GetSingle(roleId);
+
             return tree;
         }
 
