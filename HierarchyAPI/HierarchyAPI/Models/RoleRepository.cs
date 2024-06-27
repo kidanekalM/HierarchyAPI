@@ -30,7 +30,7 @@ namespace HierarchyAPI.Models
             oldRole.Name = role.Name;
             oldRole.Parent = _OrgaContext.roles.FirstOrDefault<Role>(r => r.Id.Equals(oldRole.ParentId));
             oldRole.ParentId = role.ParentId;
-            _OrgaContext.roles.Update( role);
+            _OrgaContext.roles.Update( oldRole);
             _OrgaContext.SaveChanges();
             return role;
         }

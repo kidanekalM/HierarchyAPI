@@ -43,6 +43,21 @@ namespace HierarchyAPI.Controllers
         {
             return await _roleRepository.GetSingle(roleId);
         }
+        [HttpGet("Tree")]
+        public async Task<string> Tree(Guid roleId)
+        {
+            string tree = "\n \n \n \n";
+            tree += (await _roleRepository.GetSingle(roleId)).Name;
+            tree += "---------|";
+            foreach(var child in  await _roleRepository.GetAllChildren(roleId))
+            {
+                tree += "-----" + child.Name;
+                tree += "    | \n     | \n     | \n     | \n";
+            }
+            tree += (await _roleRepository.GetAllChildren(roleId));
+            _roleRepository.GetSingle(roleId);
+            return tree;
+        }
 
     }
 }
