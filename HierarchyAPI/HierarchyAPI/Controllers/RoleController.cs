@@ -84,7 +84,7 @@ namespace HierarchyAPI.Controllers
             {
                 tree += "\n";
                 tree += spacing+ "├── ";
-                tree += await GenerateTree(spacing+ "│  ", (Guid)child.Id );
+                tree += await GenerateTree(spacing+ "│   ", (Guid)child.Id );
             }
 
             return tree;
