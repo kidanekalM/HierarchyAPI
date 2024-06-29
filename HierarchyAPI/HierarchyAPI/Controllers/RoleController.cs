@@ -75,6 +75,15 @@ namespace HierarchyAPI.Controllers
             return await GenerateTree("", roleId);
         }
         [NonAction]
+        // Problem : tree has a lot of cost and database calls 
+        // Solution1 :  Save in the database
+        //      Problem : Inconsistency                 
+        //          Solution : Have a version tracking everytime there is an update change
+        //                      the version of the to outdated add a condition everytime the tree
+        //                      is requested to get
+        // Solution2 :  
+        //      
+        // Solution3 :  
         public async Task<string> GenerateTree(string spacing,Guid roleId)
         {
             string tree = "";
