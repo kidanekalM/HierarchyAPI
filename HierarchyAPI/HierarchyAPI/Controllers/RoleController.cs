@@ -72,7 +72,8 @@ namespace HierarchyAPI.Controllers
         [HttpGet("Tree")]
         public async Task<string> Tree(Guid roleId)
         {
-            return await GenerateTree("", roleId);
+            List<Role> roles = await _roleRepository.GetAllRoles();
+            return await GenerateTree(roles,"", roleId);
         }
         [NonAction]
         // Problem : tree has a lot of cost and database calls 
@@ -84,16 +85,16 @@ namespace HierarchyAPI.Controllers
         // Solution2 :  
         //      
         // Solution3 :  
-        public async Task<string> GenerateTree(string spacing,Guid roleId)
+        public async Task<string> GenerateTree(List<Role> roles,string spacing,Guid roleId)
         {
             string tree = "";
-            tree += (await _roleRepository.GetSingle(roleId)).Name;
-            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
+            tree += (roles.Find(r=>r.Id.Equals(roleId))).Name;
+            List<Role> Children = roles.FindAll(r=>r.ParentId.Equals(roleId));
             foreach(var child in Children)
             {
                 tree += "\n";
                 tree += spacing+ "├── ";
-                tree += await GenerateTree(spacing+ "│   ", (Guid)child.Id );
+                tree += await GenerateTree(roles,spacing+ "│   ", (Guid)child.Id );
             }
 
             return tree;
