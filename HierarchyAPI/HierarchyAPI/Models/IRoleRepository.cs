@@ -10,5 +10,6 @@ namespace HierarchyAPI.Models
         public Task<List<Role>> GetAllRoles();
         public Task<List<Role>> GetAllChildren(Guid roleId);
         public Task<Role> Remove(Guid roleId);
+        public Task<Role> RemoveRecursive(Guid roleId);
     }
 }

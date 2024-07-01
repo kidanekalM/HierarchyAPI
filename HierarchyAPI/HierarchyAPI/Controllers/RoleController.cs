@@ -43,16 +43,7 @@ namespace HierarchyAPI.Controllers
         [HttpDelete("DeleteRecursive")]
         public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
         {
-            Role toDelte = await _roleRepository.GetSingle(roleId);
-            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
-            if (((Children).Count != 0))
-            {
-                foreach (var child in Children)
-                {
-                    RemoveRecursive((Guid)child.Id);
-                }
-            }
-            return await _roleRepository.Remove(roleId);
+            return await _roleRepository.RemoveRecursive(roleId); 
         }
         [HttpGet("GetAllChildren")]
         public async Task<ActionResult<List<Role>>> GetAllChildren(Guid roleId)
@@ -76,15 +67,7 @@ namespace HierarchyAPI.Controllers
             return await GenerateTree(roles,"", roleId);
         }
         [NonAction]
-        // Problem : tree has a lot of cost and database calls 
-        // Solution1 :  Save in the database
-        //      Problem : Inconsistency                 
-        //          Solution : Have a version tracking everytime there is an update change
-        //                      the version of the to outdated add a condition everytime the tree
-        //                      is requested to get
-        // Solution2 :  
-        //      
-        // Solution3 :  
+
         public async Task<string> GenerateTree(List<Role> roles,string spacing,Guid roleId)
         {
             string tree = "";
