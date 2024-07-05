@@ -27,13 +27,13 @@ namespace HierarchyAPI.Controllers
         {
             Role toDelte = await _roleRepository.GetSingle(roleId);
             List<Role> Children = await _roleRepository.GetAllChildren(roleId);
-            if ( ((Children).Count != 0))
+            if (((Children).Count != 0))
             {
-                foreach(var child in Children)
+                foreach (var child in Children)
                 {
                     child.ParentId = toDelte.ParentId;
                     child.Parent = toDelte.Parent;
-                    _roleRepository.Update((Guid)child.Id,child);
+                    _roleRepository.Update((Guid)child.Id, child);
                 }
             }
             return await _roleRepository.Remove(roleId);
@@ -41,7 +41,7 @@ namespace HierarchyAPI.Controllers
         [HttpDelete("DeleteRecursive")]
         public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
         {
-            return await _roleRepository.RemoveRecursive(roleId); 
+            return await _roleRepository.RemoveRecursive(roleId);
         }
         [HttpGet("GetAllChildren")]
         public async Task<ActionResult<List<Role>>> GetAllChildren(Guid roleId)
@@ -59,27 +59,34 @@ namespace HierarchyAPI.Controllers
             return await _roleRepository.GetSingle(roleId);
         }
         [HttpGet("Tree")]
-        public async Task<string> Tree(Guid roleId)
+        public async Task<TreeNode> Tree(Guid roleId)
         {
             List<Role> roles = await _roleRepository.GetAllRoles();
-            return await GenerateTree(roles,"", roleId);
+            return await GenerateTree(roles, roleId);
         }
         [NonAction]
-
-        public async Task<string> GenerateTree(List<Role> roles,string spacing,Guid roleId)
+        public async Task<TreeNode> GenerateTree(List<Role> roles, Guid? roleId)
         {
-            string tree = "";
-            tree += (roles.Find(r=>r.Id.Equals(roleId))).Name;
-            List<Role> Children = roles.FindAll(r=>r.ParentId.Equals(roleId));
-            foreach(var child in Children)
+            TreeNode RootNode;
+            if (roleId == null)
             {
-                tree += "\n";
-                tree += spacing+ "├── ";
-                tree += await GenerateTree(roles,spacing+ "│   ", (Guid)child.Id );
+                var Root = roles.Find(r => r.ParentId == null);
+                roleId = Root.Id;
+                RootNode = new TreeNode(Root.Id, Root.Name);
             }
-
-            return tree;
+            else
+            {
+                var Root = roles.Find(r => r.Id == roleId);
+                RootNode = new TreeNode(Root.Id, Root.Name);
+            }
+            List<Role> Children = roles.FindAll(r => r.ParentId == roleId);
+            RootNode.Children = new List<TreeNode>();
+            foreach (var child in Children)
+            {
+                TreeNode childNode = await GenerateTree(roles, (Guid)child.Id);
+                RootNode.Children.Add(childNode);
+            }
+            return RootNode;
         }
-
     }
 }
