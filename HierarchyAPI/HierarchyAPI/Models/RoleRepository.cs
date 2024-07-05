@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace HierarchyAPI.Models
 {
@@ -17,9 +18,9 @@ namespace HierarchyAPI.Models
         }
         public async Task<Role> Remove(Guid roleId)
         {
-            var role = _OrgaContext.roles.FirstOrDefault<Role>(r => r.Id.Equals(roleId));
+            var role = await _OrgaContext.roles.FirstOrDefaultAsync(r => r.Id==roleId);
             _OrgaContext.roles.Remove(role) ;
-            _OrgaContext.SaveChanges();
+            await _OrgaContext.SaveChangesAsync();
             return role;
         }
         public async Task<Role> RemoveRecursive(Guid roleId)
