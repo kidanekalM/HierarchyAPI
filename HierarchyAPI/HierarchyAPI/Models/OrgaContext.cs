@@ -10,5 +10,6 @@ namespace HierarchyAPI.Models
             
         }
         public DbSet<Role> roles { get; set; }
+
     }
 }

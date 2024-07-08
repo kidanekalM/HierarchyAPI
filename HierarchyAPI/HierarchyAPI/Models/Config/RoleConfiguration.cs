@@ -6,6 +6,9 @@ namespace HierarchyAPI.Models.Config
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
+            builder.ToTable("Role_Table");
+            builder.Property(r => r.Description).HasField("description");
+            builder.Property(r => r.Description).HasDefaultValue("Description is not set... ");
             builder.Property(r=>r.Description).IsRequired();
             builder.Property(r=>r.Name).IsRequired();
             throw new NotImplementedException();
