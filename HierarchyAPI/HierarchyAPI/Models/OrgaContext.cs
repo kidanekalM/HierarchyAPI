@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HierarchyAPI.Models.Config;
+using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 
 namespace HierarchyAPI.Models
@@ -11,5 +13,9 @@ namespace HierarchyAPI.Models
         }
         public DbSet<Role> roles { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrgaContext).Assembly);  
+        }
     }
 }

@@ -1,14 +1,18 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Dapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HierarchyAPI.Models
 {
     public class RoleRepository:IRoleRepository
     {
         private readonly OrgaContext _OrgaContext;
-        public RoleRepository( OrgaContext orgaContext ) 
+        private readonly DapperContext _DapperContext;
+        public RoleRepository( OrgaContext orgaContext,DapperContext dapperContext) 
         {
             _OrgaContext = orgaContext;
+            _DapperContext = dapperContext;
         }
         public async Task<Role> Insert(Role role)
         {
@@ -70,7 +74,16 @@ namespace HierarchyAPI.Models
         {
             return _OrgaContext.roles.FirstOrDefault(r=>r.Id.Equals(roleId));
         }
+        public async Task<IEnumerable<Role>> GetRoles()
+        {
+            var query = "SELECT * FROM Roles";
 
+            using (var connection = _DapperContext.CreateConnection())
+            {
+                var roles = await connection.QueryAsync<Role>(query);
+                return roles.ToList();
+            }
+        }
 
     }
 }
