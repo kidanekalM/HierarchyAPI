@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRoleRepository,RoleRepository>();
-
+builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddDbContext<OrgaContext>(options => {
     options.UseNpgsql(builder.Configuration.
         GetConnectionString("Postgres"))
