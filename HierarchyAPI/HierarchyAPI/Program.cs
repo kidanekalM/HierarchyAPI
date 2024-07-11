@@ -1,4 +1,5 @@
 using HierarchyAPI.Models;
+using HierarchyAPI.Models.Repository;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
