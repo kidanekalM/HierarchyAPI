@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace HierarchyAPI.Models.Repository
+namespace HierarchyAPI.Models.Repositories
 {
     public class RoleRepository : IRoleRepository
     {
@@ -51,7 +51,7 @@ namespace HierarchyAPI.Models.Repository
         }
         public async Task<Role> Update(Guid roleId, Role role)
         {
-            var oldRole = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(roleId));
+            var oldRole = _OrgaContext.roles.FirstOrDefault(r => r.Id==roleId);
             oldRole.Description = role.Description;
             oldRole.Name = role.Name;
             oldRole.Parent = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(oldRole.ParentId));

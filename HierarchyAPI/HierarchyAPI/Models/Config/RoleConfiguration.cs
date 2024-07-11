@@ -7,10 +7,9 @@ namespace HierarchyAPI.Models.Config
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Role_Table");
-            builder.Property(r => r.Description).
-            //builder.Property(r => r.Description).HasDefaultValue("Description is not set... ");
-            //builder.Property(r=>r.Description).IsRequired();
-            //builder.Property(r=>r.Name).IsRequired();
+            builder.Property(r => r.Description).HasColumnType("text");
+            builder.Property(r => r.Description).HasDefaultValue("Description is not set... ");
+            builder.Property(r=>r.Name).IsRequired();
         }
     }
 }
@@ -32,6 +31,8 @@ namespace HierarchyAPI.Models.Config
    - `Ignore()`: Excludes a class or property from mapping to a table or column.
    - `OwnsOne()`: Configures a relationship where the target entity is owned by this entity.
    - `ToTable()`: Specifies the database table that the entity maps to.
+   - HasColumnType()
+   - HasColumnName()
 
 3. **Property Configuration**:
    - `HasColumnName()`: Configures the corresponding column name in the database for the property.

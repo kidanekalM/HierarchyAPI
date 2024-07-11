@@ -1,4 +1,5 @@
 ﻿using HierarchyAPI.Models;
+using HierarchyAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HierarchyAPI.Controllers
@@ -7,61 +8,63 @@ namespace HierarchyAPI.Controllers
     [Route("/")]
     public class RoleController : ControllerBase
     {
-        private readonly IRoleRepository _roleRepository;
-        public RoleController(IRoleRepository roleRepository)
+        private readonly IRoleQueryRepository _roleQueryRepository;
+        private readonly IRoleCommandsRepository _roleCommandsRepository;
+        public RoleController(IRoleQueryRepository roleQueryRepository,IRoleCommandsRepository roleCommandsRepository)
         {
-            _roleRepository = roleRepository;
+            _roleQueryRepository = roleQueryRepository;
+            _roleCommandsRepository = roleCommandsRepository;
         }
         [HttpPost("Insert")]
         public async Task<Role> Insert(Role role)
         {
-            return await _roleRepository.Insert(role);
+            return await _roleCommandsRepository.Insert(role);
         }
         [HttpPut("Update")]
         public async Task<ActionResult<Role>> Update(Guid roleId, Role role)
         {
-            return await _roleRepository.Update(roleId, role);
+            return await _roleCommandsRepository.Update(roleId, role);
         }
         [HttpDelete("Delete")]
         public async Task<ActionResult<Role>> Remove(Guid roleId)
         {
-            Role toDelte = await _roleRepository.GetSingle(roleId);
-            List<Role> Children = await _roleRepository.GetAllChildren(roleId);
+            Role toDelte = await _roleQueryRepository.GetSingle(roleId);
+            List<Role> Children = await _roleQueryRepository.GetAllChildren(roleId);
             if (((Children).Count != 0))
             {
                 foreach (var child in Children)
                 {
                     child.ParentId = toDelte.ParentId;
                     child.Parent = toDelte.Parent;
-                    _roleRepository.Update((Guid)child.Id, child);
+                    _roleCommandsRepository.Update((Guid)child.Id, child);
                 }
             }
-            return await _roleRepository.Remove(roleId);
+            return await _roleCommandsRepository.Remove(roleId);
         }
         [HttpDelete("DeleteRecursive")]
         public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
         {
-            return await _roleRepository.RemoveRecursive(roleId);
+            return await _roleCommandsRepository.RemoveRecursive(roleId);
         }
         [HttpGet("GetAllChildren")]
         public async Task<ActionResult<List<Role>>> GetAllChildren(Guid roleId)
         {
-            return await _roleRepository.GetAllChildren(roleId);
+            return await _roleQueryRepository.GetAllChildren(roleId);
         }
         [HttpGet("GetAllRoles")]
         public async Task<ActionResult<List<Role>>> GetAllRoles()
         {
-            return await _roleRepository.GetAllRoles();
+            return await _roleQueryRepository.GetAllRoles();
         }
         [HttpGet("GetSingle")]
         public async Task<Role> GetSingle(Guid roleId)
         {
-            return await _roleRepository.GetSingle(roleId);
+            return await _roleQueryRepository.GetSingle(roleId);
         }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
-            List<Role> roles = await _roleRepository.GetAllRoles();
+            List<Role> roles = await _roleQueryRepository.GetAllRoles();
             return await GenerateTree(roles, roleId);
         }
         [NonAction]

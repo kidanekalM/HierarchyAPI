@@ -1,5 +1,5 @@
 using HierarchyAPI.Models;
-using HierarchyAPI.Models.Repository;
+using HierarchyAPI.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +11,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IRoleRepository,RoleRepository>();
+builder.Services.AddScoped<IRoleQueryRepository,RoleQueryRepository>();
+builder.Services.AddScoped<IRoleCommandsRepository,RoleCommandsRepository>();
 builder.Services.AddSingleton<DapperContext>();
 builder.Services.AddDbContext<OrgaContext>(options => {
     options.UseNpgsql(builder.Configuration.
