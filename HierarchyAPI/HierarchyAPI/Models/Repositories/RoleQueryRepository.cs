@@ -13,21 +13,19 @@ namespace HierarchyAPI.Models.Repositories
         }
         public async Task<List<Role>> GetAllChildren(Guid roleId)
         {
+            var query = "SELECT * FROM public.\"Role_Table\" WHERE ParentId=\""+roleId+"\"";
+
+            using (var connection = _DapperContext.CreateConnection())
+            {
+                var children = await connection.QueryAsync<Role>(query);
+                return children.ToList();
+            }
             return _OrgaContext.roles.Where(r => r.ParentId.Equals(roleId)).ToList();
         }
 
         public async Task<List<Role>> GetAllRoles()
         {
-            return _OrgaContext.roles.ToList();
-        }
-
-        public async Task<Role> GetSingle(Guid roleId)
-        {
-            return _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(roleId));
-        }
-        public async Task<IEnumerable<Role>> GetRoles()
-        {
-            var query = "SELECT * FROM Roles";
+            var query = "SELECT * FROM public.\"Role_Table\"";
 
             using (var connection = _DapperContext.CreateConnection())
             {
@@ -35,5 +33,18 @@ namespace HierarchyAPI.Models.Repositories
                 return roles.ToList();
             }
         }
+
+        public async Task<Role> GetSingle(Guid roleId)
+        {
+            var query = "SELECT * FROM public.\"Role_Table\" WHERE public.\"Role_Table\".\"Id\" = \"" + roleId + "\"";
+
+            using (var connection = _DapperContext.CreateConnection())
+            {
+                var role = (await connection.QueryAsync<Role>(query)).FirstOrDefault();
+                return role;
+            }
+            return _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(roleId));
+        }
+
     }
 }
