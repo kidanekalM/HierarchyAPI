@@ -4,11 +4,9 @@ namespace HierarchyAPI.Models.Repositories
 {
     public class RoleQueryRepository:IRoleQueryRepository
     {
-        private readonly OrgaContext _OrgaContext;
         private readonly DapperContext _DapperContext;
-        public RoleQueryRepository(OrgaContext orgaContext, DapperContext dapperContext)
+        public RoleQueryRepository(DapperContext dapperContext)
         {
-            _OrgaContext = orgaContext;
             _DapperContext = dapperContext;
         }
         public async Task<List<Role>> GetAllChildren(Guid roleId)
