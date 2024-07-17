@@ -1,6 +1,7 @@
 using HierarchyAPI.Models;
 using HierarchyAPI.Models.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IRoleRepository,RoleRepository>();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly)); builder.Services.AddScoped<IRoleRepository,RoleRepository>();
 builder.Services.AddScoped<IRoleQueryRepository,RoleQueryRepository>();
 builder.Services.AddScoped<IRoleCommandsRepository,RoleCommandsRepository>();
 builder.Services.AddSingleton<DapperContext>();
