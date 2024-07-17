@@ -19,8 +19,6 @@ namespace HierarchyAPI.Models.Repositories
                 return children.ToList();
             }
         }
-
-
         public async Task<List<Role>> GetAllRoles()
         {
             var query = "SELECT * FROM public.\"Role_Table\"";
