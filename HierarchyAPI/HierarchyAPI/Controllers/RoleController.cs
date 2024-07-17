@@ -1,7 +1,8 @@
 ﻿using HierarchyAPI.Models;
 using HierarchyAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
-
+using MediatR;
+using HierarchyAPI.Models.Queries;
 namespace HierarchyAPI.Controllers
 {
     [ApiController]
@@ -10,10 +11,12 @@ namespace HierarchyAPI.Controllers
     {
         private readonly IRoleQueryRepository _roleQueryRepository;
         private readonly IRoleCommandsRepository _roleCommandsRepository;
-        public RoleController(IRoleQueryRepository roleQueryRepository,IRoleCommandsRepository roleCommandsRepository)
+        private readonly IMediator _mediator;
+        public RoleController(IRoleQueryRepository roleQueryRepository,IRoleCommandsRepository roleCommandsRepository,IMediator mediator)
         {
             _roleQueryRepository = roleQueryRepository;
             _roleCommandsRepository = roleCommandsRepository;
+            _mediator = mediator;
         }
         [HttpPost("Insert")]
         public async Task<Role> Insert(Role role)
@@ -49,7 +52,10 @@ namespace HierarchyAPI.Controllers
         [HttpGet("GetAllChildren")]
         public async Task<ActionResult<List<Role>>> GetAllChildren(Guid roleId)
         {
-            return await _roleQueryRepository.GetAllChildren(roleId);
+            var query = new GetAllChildrenQuery { guid = roleId };
+            var children = await _mediator.Send(query);
+
+            return Ok(children);
         }
         [HttpGet("GetAllRoles")]
         public async Task<ActionResult<List<Role>>> GetAllRoles()
