@@ -60,7 +60,8 @@ namespace HierarchyAPI.Controllers
         [HttpGet("GetAllRoles")]
         public async Task<ActionResult<List<Role>>> GetAllRoles()
         {
-            return await _roleQueryRepository.GetAllRoles();
+            var roles =  await _mediator.Send(new GetAllRolesQuery());
+            return roles;
         }
         [HttpGet("GetSingle")]
         public async Task<Role> GetSingle(Guid roleId)
@@ -70,7 +71,7 @@ namespace HierarchyAPI.Controllers
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
-            List<Role> roles = await _roleQueryRepository.GetAllRoles();
+            List<Role> roles = await _mediator.Send(new GetAllRolesQuery());
             return await GenerateTree(roles, roleId);
         }
         [NonAction]
