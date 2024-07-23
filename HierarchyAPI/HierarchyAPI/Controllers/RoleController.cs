@@ -3,6 +3,7 @@ using HierarchyAPI.Models.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using HierarchyAPI.Models.Queries;
+using HierarchyAPI.Models.Commands;
 namespace HierarchyAPI.Controllers
 {
     [ApiController]
@@ -21,28 +22,26 @@ namespace HierarchyAPI.Controllers
         [HttpPost("Insert")]
         public async Task<Role> Insert(Role role)
         {
-            return await _roleCommandsRepository.Insert(role);
+            var cmd = new InsertCommand
+            {
+                Role = role
+            };
+            return await _mediator.Send(cmd);
         }
         [HttpPut("Update")]
         public async Task<ActionResult<Role>> Update(Guid roleId, Role role)
         {
-            return await _roleCommandsRepository.Update(roleId, role);
+            var updateCmd = new UpdateCommand
+            {
+                Id = roleId,
+                Role = role
+            };
+            return await _mediator.Send(updateCmd);
         }
         [HttpDelete("Delete")]
-        public async Task<ActionResult<Role>> Remove(Guid roleId)
+        public async Task<Role> Remove(Guid roleId)
         {
-            Role toDelte = await _roleQueryRepository.GetSingle(roleId);
-            List<Role> Children = await _roleQueryRepository.GetAllChildren(roleId);
-            if (((Children).Count != 0))
-            {
-                foreach (var child in Children)
-                {
-                    child.ParentId = toDelte.ParentId;
-                    child.Parent = toDelte.Parent;
-                    _roleCommandsRepository.Update((Guid)child.Id, child);
-                }
-            }
-            return await _roleCommandsRepository.Remove(roleId);
+            return await _mediator.Send(new DeleteCommand() { Id = roleId });
         }
         [HttpDelete("DeleteRecursive")]
         public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
