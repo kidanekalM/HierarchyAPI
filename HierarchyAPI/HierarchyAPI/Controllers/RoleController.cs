@@ -19,6 +19,7 @@ namespace HierarchyAPI.Controllers
             _roleCommandsRepository = roleCommandsRepository;
             _mediator = mediator;
         }
+        //Accept cmd
         [HttpPost("Insert")]
         public async Task<Role> Insert(Role role)
         {
