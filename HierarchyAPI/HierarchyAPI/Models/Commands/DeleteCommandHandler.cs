@@ -1,11 +1,6 @@
 ﻿using Dapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Runtime.CompilerServices;
-using HierarchyAPI.Models.Queries;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Azure.Core;
-
 namespace HierarchyAPI.Models.Commands
 {
     public class DeleteCommandHandler:IRequestHandler<DeleteCommand,Role>
