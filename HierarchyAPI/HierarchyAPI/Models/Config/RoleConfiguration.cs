@@ -4,6 +4,7 @@ namespace HierarchyAPI.Models.Config
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
+        //do camel case
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Role_Table");
