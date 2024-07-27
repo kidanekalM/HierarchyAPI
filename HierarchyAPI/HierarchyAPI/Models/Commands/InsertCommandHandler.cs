@@ -6,16 +6,15 @@ namespace HierarchyAPI.Models.Commands
 {
     public class InsertCommandHandler:IRequestHandler<InsertCommand,Role>
     {
-        private readonly OrgaContext _context;
-        public InsertCommandHandler(OrgaContext orgaContext) 
+        private readonly Repositories.IRoleCommandsRepository _repository;
+        public InsertCommandHandler(Repositories.IRoleCommandsRepository roleCommandsRepository) 
         {
-            _context = orgaContext;
+            _repository = roleCommandsRepository;
         }
         public async Task<Role> Handle(InsertCommand insertCommand,CancellationToken cancellationToken)
         {
-            _context.roles.Add(insertCommand.Role);
-            _context.SaveChanges();
-            return insertCommand.Role;
+            var role = await _repository.Insert(insertCommand.Role);
+            return role;
         }
     }
 }
