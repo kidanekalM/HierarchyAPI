@@ -5,22 +5,15 @@ namespace HierarchyAPI.Models.Commands
 {
     public class UpdateCommandHandler : IRequestHandler<UpdateCommand,Role>
     {
-        private readonly OrgaContext _context;
-        public UpdateCommandHandler(OrgaContext orgaContext) 
+        private readonly Repositories.IRoleCommandsRepository _commandsRepository;
+        public UpdateCommandHandler(Repositories.IRoleCommandsRepository roleCommandsRepository) 
         {
-            _context = orgaContext;
+            _commandsRepository = roleCommandsRepository;
         }
         //check null 
         public async Task<Role> Handle(UpdateCommand command,CancellationToken cancellationToken)
         {
-            Role role = command.Role;
-            var oldRole = _context.roles.FirstOrDefault(r => r.Id.Equals(command.Id));
-            oldRole.Description = role.Description;
-            oldRole.Name = role.Name;
-            oldRole.Parent = _context.roles.FirstOrDefault(r => r.Id.Equals(role.ParentId));
-            oldRole.ParentId = role.ParentId;
-            _context.roles.Update(oldRole);
-            _context.SaveChanges();
+            Role role = await _commandsRepository.Update(command.Id,command.Role);
             return role;
         }
     }
