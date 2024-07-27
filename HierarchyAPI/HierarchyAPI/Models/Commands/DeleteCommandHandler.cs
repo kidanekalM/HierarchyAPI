@@ -1,39 +1,32 @@
 ﻿using Dapper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 namespace HierarchyAPI.Models.Commands
 {
     public class DeleteCommandHandler:IRequestHandler<DeleteCommand,Role>
     {
-        private readonly OrgaContext _context;
-        private readonly DapperContext _DapperContext;
-        public DeleteCommandHandler(OrgaContext orgaContext,DapperContext dapperContext)
+        private readonly Repositories.IRoleQueryRepository roleQueryRepository;
+        private readonly Repositories.IRoleCommandsRepository roleCommandRepository;
+        public DeleteCommandHandler(Repositories.IRoleCommandsRepository roleCommandsRepository, Repositories.IRoleQueryRepository roleQueryRepository)
         {
-            _context = orgaContext;
-            _DapperContext = dapperContext;
+            this.roleQueryRepository = roleQueryRepository;
+            this.roleCommandRepository = roleCommandsRepository;
         }
         public async Task<Role> Handle(DeleteCommand deleteCommand,CancellationToken cancellationToken)
         {
-            var query = "SELECT * FROM public.\"Role_Table\" WHERE public.\"Role_Table\".\"Id\" = @RoleId";
-            Role toDelte;
-            List<Role> Children;
-            using (var connection = _DapperContext.CreateConnection())
-            {
-                var rol = (await connection.QueryAsync<Role>(query, new { RoleId = deleteCommand.Id })).FirstOrDefault();
-                toDelte = rol;
-            }
-            Children = _context.roles.Where(r=>r.ParentId==deleteCommand.Id).ToList();
+            Role toDelte = await roleQueryRepository.GetSingle(deleteCommand.Id);
+            List<Role> Children = await roleQueryRepository.GetAllChildren(deleteCommand.Id);
            if (((Children).Count != 0))
             {
                 foreach (var child in Children)
                 {
                     child.ParentId = toDelte.ParentId;
                     child.Parent = toDelte.Parent;
+                    await roleCommandRepository.Update((Guid)child.Id,child);
                 }
             }
-            var role = await _context.roles.FirstOrDefaultAsync(r => r.Id == deleteCommand.Id);
-            _context.roles.Remove(role);
-            await _context.SaveChangesAsync();
+           var role = await roleCommandRepository.Remove(deleteCommand.Id);
+
             return role;
         }
     }
