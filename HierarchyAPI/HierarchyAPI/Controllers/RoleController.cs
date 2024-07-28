@@ -58,6 +58,11 @@ namespace HierarchyAPI.Controllers
         {
             return await _mediator.Send(getSingleQuery);
         }
+        [HttpGet("GetCandidate")]
+        public async Task<List<Role>> GetCandidates([FromQuery]GetCandidatesQuery getCandidatesQuery)
+        {
+            return await _mediator.Send(getCandidatesQuery);
+        }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
