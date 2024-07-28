@@ -7,10 +7,12 @@ namespace HierarchyAPI.Models.Config
         //do camel case
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.ToTable("Role_Table");
-            builder.Property(r => r.Description).HasColumnType("text");
+            builder.ToTable("role_table");
+            builder.Property(r => r.Description).HasColumnName("role_description").HasColumnType("text");
             builder.Property(r => r.Description).HasDefaultValue("Description is not set... ");
-            builder.Property(r=>r.Name).IsRequired();
+            builder.Property(r=>r.Name).HasColumnName("role_name").IsRequired();
+            builder.Property(r => r.ParentId).HasColumnName("parent_id");
+            builder.Property(r => r.IsCandidate).HasColumnName("is_candidate");
         }
     }
 }
