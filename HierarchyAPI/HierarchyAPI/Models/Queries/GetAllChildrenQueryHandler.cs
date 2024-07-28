@@ -6,20 +6,19 @@ namespace HierarchyAPI.Models.Queries
 {
     public class GetAllChildrenQueryHandler:IRequestHandler<GetAllChildrenQuery, List<Role>>
     {
-        public DapperContext _dapperContext;
-        public GetAllChildrenQueryHandler(DapperContext context)
+        private readonly Repositories.IRoleQueryRepository _repository;
+        public GetAllChildrenQueryHandler(Repositories.IRoleQueryRepository roleQueryRepository)
         {
-            _dapperContext = context;
+            _repository = roleQueryRepository;
         }
         public async Task<List<Role>> Handle(GetAllChildrenQuery request,CancellationToken cancellationToken)
         {
-            var query = "SELECT * FROM public.\"Role_Table\" WHERE \"ParentId\" = @RoleId";
-
-            using (var connection = _dapperContext.CreateConnection())
-            {
-                var children = await connection.QueryAsync<Role>(query, new { RoleId = request.guid});
-                return children.ToList();
-            }
+            throw new NotImplementedException();
         }
+        public async Task<List<Role>> GetAllChildren(GetAllChildrenQuery request,CancellationToken cancellationToken)
+        {
+           return await _repository.GetAllChildren(request.guid);
+        }
+
     }
 }
