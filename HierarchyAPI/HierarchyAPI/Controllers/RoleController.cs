@@ -21,39 +21,29 @@ namespace HierarchyAPI.Controllers
         }
         //Accept cmd
         [HttpPost("Insert")]
-        public async Task<Role> Insert(Role role)
+        public async Task<Role> Insert(InsertCommand insertCommand)
         {
-            var cmd = new InsertCommand
-            {
-                Role = role
-            };
-            return await _mediator.Send(cmd);
+            return await _mediator.Send(insertCommand);
         }
         [HttpPut("Update")]
-        public async Task<ActionResult<Role>> Update(Guid roleId, Role role)
+        public async Task<ActionResult<Role>> Update(UpdateCommand updateCommand)
         {
-            var updateCmd = new UpdateCommand
-            {
-                Id = roleId,
-                Role = role
-            };
-            return await _mediator.Send(updateCmd);
+            return await _mediator.Send(updateCommand);
         }
         [HttpDelete("Delete")]
-        public async Task<Role> Remove(Guid roleId)
+        public async Task<Role> Remove(DeleteCommand deleteCommand)
         {
-            return await _mediator.Send(new DeleteCommand() { Id = roleId });
+            return await _mediator.Send(deleteCommand);
         }
         [HttpDelete("DeleteRecursive")]
-        public async Task<ActionResult<Role>> RemoveRecursive(Guid roleId)
+        public async Task<ActionResult<Role>> RemoveRecursive(RemoveRecursiveCommand removeRecursiveCommand)
         {
-            return await _roleCommandsRepository.RemoveRecursive(roleId);
+            return await _mediator.Send(removeRecursiveCommand);
         }
         [HttpGet("GetAllChildren")]
-        public async Task<ActionResult<List<Role>>> GetAllChildren(Guid roleId)
+        public async Task<ActionResult<List<Role>>> GetAllChildren(GetAllChildrenQuery getAllChildrenQuery)
         {
-            var query = new GetAllChildrenQuery { guid = roleId };
-            var children = await _mediator.Send(query);
+            var children = await _mediator.Send(getAllChildrenQuery);
 
             return Ok(children);
         }
@@ -64,9 +54,9 @@ namespace HierarchyAPI.Controllers
             return roles;
         }
         [HttpGet("GetSingle")]
-        public async Task<Role> GetSingle(Guid roleId)
+        public async Task<Role> GetSingle(GetSingleQuery getSingleQuery)
         {
-            return await _roleQueryRepository.GetSingle(roleId);
+            return await _mediator.Send(getSingleQuery);
         }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
