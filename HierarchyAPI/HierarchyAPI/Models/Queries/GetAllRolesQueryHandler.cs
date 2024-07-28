@@ -1,23 +1,18 @@
 ﻿using MediatR;
 using Dapper;
+using HierarchyAPI.Models.Repositories;
 namespace HierarchyAPI.Models.Queries
 {
     public class GetAllRolesQueryHandler:IRequestHandler<GetAllRolesQuery,List<Role>>
     {
-        private readonly DapperContext dapperContext;
-        public GetAllRolesQueryHandler(DapperContext context)
+        private readonly IRoleQueryRepository _roleQueryRepository;
+        public GetAllRolesQueryHandler(IRoleQueryRepository roleQueryRepository)
         {
-            dapperContext = context;
+            _roleQueryRepository = roleQueryRepository;
         }
         public async Task<List<Role>> Handle(GetAllRolesQuery getAllRolesQuery,CancellationToken cancellationToken)
         {
-            var query = "SELECT * FROM public.\"Role_Table\"";
-
-            using (var connection = dapperContext.CreateConnection())
-            {
-                var roles = await connection.QueryAsync<Role>(query);
-                return roles.ToList();
-            }
+            return await _roleQueryRepository.GetAllRoles();
         }
     }
 }
