@@ -10,5 +10,6 @@ namespace HierarchyAPI.Models
         [ForeignKey("Parent")]
         public Guid? ParentId { get; set; }
         public Role? Parent { get; set; }
+        public bool IsCandidate { get; set; }
     }
 }
