@@ -11,7 +11,7 @@ namespace HierarchyAPI.Models.Repositories
         }
         public async Task<List<Role>> GetAllChildren(Guid roleId)
         {
-            var query = "SELECT * FROM public.\"Role_Table\" WHERE \"ParentId\" = @RoleId";
+            var query = "SELECT * FROM public.\"role_table\" WHERE \"parent_id\" = @RoleId";
 
             using (var connection = _DapperContext.CreateConnection())
             {
@@ -21,7 +21,7 @@ namespace HierarchyAPI.Models.Repositories
         }
         public async Task<List<Role>> GetAllRoles()
         {
-            var query = "SELECT * FROM public.\"Role_Table\"";
+            var query = "SELECT * FROM public.\"role_table\"";
 
             using (var connection = _DapperContext.CreateConnection())
             {
@@ -31,12 +31,22 @@ namespace HierarchyAPI.Models.Repositories
         }
         public async Task<Role> GetSingle(Guid roleId)
         {
-            var query = "SELECT * FROM public.\"Role_Table\" WHERE public.\"Role_Table\".\"Id\" = @RoleId";
+            var query = "SELECT * FROM public.\"role_table\" WHERE public.\"role_table\".\"id\" = @RoleId";
 
             using (var connection = _DapperContext.CreateConnection())
             {
                 var role = (await connection.QueryAsync<Role>(query, new { RoleId = roleId })).FirstOrDefault();
                 return role;
+            }
+        }
+        public async Task<List<Role>> GetCandidates(Guid roleId)
+        {
+            var query = "SELECT * FROM public.\"role_table\" WHERE \"parent_id\" = @RoleId AND is_candidate = true";
+
+            using (var connection = _DapperContext.CreateConnection())
+            {
+                var children = await connection.QueryAsync<Role>(query, new { RoleId = roleId });
+                return children.ToList();
             }
         }
 
