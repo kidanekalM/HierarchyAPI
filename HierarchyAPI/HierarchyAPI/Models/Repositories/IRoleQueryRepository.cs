@@ -5,5 +5,6 @@
         public Task<List<Role>> GetAllRoles();
         public Task<Role> GetSingle(Guid roleId);
         public Task<List<Role>> GetAllChildren(Guid roleId);
-    }
+        public Task<List<Role>> GetCandidates(Guid roleId);
+     }
 }
