@@ -30,9 +30,9 @@ namespace HierarchyAPI.Test
             var newRole = new Role
             {
                 Id = Guid.NewGuid(),
-                Name = "Release Manager",
-                Description = "Manages Releases",
-                ParentId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afc4"),
+                Role_Name = "Release Manager",
+                Role_Description = "Manages Releases",
+                Parent_Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afc4"),
                 Parent = null
             };
             var cmd = new Models.Commands.InsertCommand()
@@ -46,7 +46,7 @@ namespace HierarchyAPI.Test
             var addedRole = await _roleQueryRepositoryMock.Object.GetSingle((Guid)newRole.Id);
             //Assert.NotNull(addedRole);
             
-            Assert.Equal(newRole.Name, addedRole.Name);
+            Assert.Equal(newRole.Role_Name, addedRole.Role_Name);
         }
 
     }
