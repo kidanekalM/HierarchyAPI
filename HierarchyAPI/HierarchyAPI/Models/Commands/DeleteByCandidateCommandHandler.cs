@@ -28,7 +28,7 @@ namespace HierarchyAPI.Models.Commands
                     foreach (var child in children)
                     {
                         child.Parent = candidate;
-                        child.ParentId = candidate.Id;
+                        child.Parent_Id = candidate.Id;
                         await _roleCommandsRepository.Update((Guid)child.Id, child);
                     }
                 }
