@@ -54,7 +54,7 @@ namespace HierarchyAPI.Controllers
             return roles;
         }
         [HttpGet("GetSingle")]
-        public async Task<Role> GetSingle(GetSingleQuery getSingleQuery)
+        public async Task<Role> GetSingle([FromQuery]GetSingleQuery getSingleQuery)
         {
             return await _mediator.Send(getSingleQuery);
         }
@@ -75,16 +75,16 @@ namespace HierarchyAPI.Controllers
             TreeNode RootNode;
             if (roleId == null)
             {
-                var Root = roles.Find(r => r.ParentId == null);
+                var Root = roles.Find(r => r.Parent_Id == null);
                 roleId = Root.Id;
-                RootNode = new TreeNode(Root.Id, Root.Name);
+                RootNode = new TreeNode(Root.Id, Root.Role_Name);
             }
             else
             {
                 var Root = roles.Find(r => r.Id == roleId);
-                RootNode = new TreeNode(Root.Id, Root.Name);
+                RootNode = new TreeNode(Root.Id, Root.Role_Name);
             }
-            List<Role> Children = roles.FindAll(r => r.ParentId == roleId);
+            List<Role> Children = roles.FindAll(r => r.Parent_Id == roleId);
             RootNode.Children = new List<TreeNode>();
             foreach (var child in Children)
             {
