@@ -20,7 +20,7 @@ namespace HierarchyAPI.Models.Commands
             {
                 foreach (var child in Children)
                 {
-                    child.ParentId = toDelte.ParentId;
+                    child.Parent_Id = toDelte.Parent_Id;
                     child.Parent = toDelte.Parent;
                     await roleCommandRepository.Update((Guid)child.Id,child);
                 }
