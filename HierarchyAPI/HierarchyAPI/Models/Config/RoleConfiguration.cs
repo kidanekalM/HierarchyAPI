@@ -8,11 +8,11 @@ namespace HierarchyAPI.Models.Config
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("role_table");
-            builder.Property(r => r.Description).HasColumnName("role_description").HasColumnType("text");
-            builder.Property(r => r.Description).HasDefaultValue("Description is not set... ");
-            builder.Property(r=>r.Name).HasColumnName("role_name").IsRequired();
-            builder.Property(r => r.ParentId).HasColumnName("parent_id");
-            builder.Property(r => r.IsCandidate).HasColumnName("is_candidate");
+            builder.Property(r => r.Role_Description).HasColumnName("role_description").HasColumnType("text");
+            builder.Property(r => r.Role_Description).HasDefaultValue("Description is not set... ");
+            builder.Property(r=>r.Role_Name).HasColumnName("role_name").IsRequired();
+            builder.Property(r => r.Parent_Id).HasColumnName("parent_id");
+            builder.Property(r => r.Is_Candidate).HasColumnName("is_candidate");
         }
     }
 }
