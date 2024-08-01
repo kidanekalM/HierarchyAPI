@@ -18,4 +18,5 @@ namespace HierarchyAPI.Models
            return new NpgsqlConnection(ConnectionString); 
         }
     }
+
 }
