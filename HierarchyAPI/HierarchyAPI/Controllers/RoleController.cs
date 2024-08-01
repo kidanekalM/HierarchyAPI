@@ -43,30 +43,33 @@ namespace HierarchyAPI.Controllers
         [HttpGet("GetAllChildren")]
         public async Task<ActionResult<List<Role>>> GetAllChildren(GetAllChildrenQuery getAllChildrenQuery)
         {
-            var children = await _mediator.Send(getAllChildrenQuery);
-
+            //var children = await _mediator.Send(getAllChildrenQuery);
+            var children = _roleQueryRepository.GetAllChildren(getAllChildrenQuery.guid); 
             return Ok(children);
         }
         [HttpGet("GetAllRoles")]
-        public async Task<ActionResult<List<Role>>> GetAllRoles()
+        public async Task<List<Role>> GetAllRoles()
         {
-            var roles =  await _mediator.Send(new GetAllRolesQuery());
+            //var roles =  await _mediator.Send(new GetAllRolesQuery());
+            var roles = await _roleQueryRepository.GetAllRoles();
             return roles;
         }
         [HttpGet("GetSingle")]
         public async Task<Role> GetSingle([FromQuery]GetSingleQuery getSingleQuery)
         {
-            return await _mediator.Send(getSingleQuery);
+            //return await _mediator.Send(getSingleQuery);
+            return await _roleQueryRepository.GetSingle(getSingleQuery.RoleId);
         }
         [HttpGet("GetCandidate")]
         public async Task<List<Role>> GetCandidates([FromQuery]GetCandidatesQuery getCandidatesQuery)
         {
-            return await _mediator.Send(getCandidatesQuery);
+            //return await _mediator.Send(getCandidatesQuery);
+            return await _roleQueryRepository.GetCandidates(getCandidatesQuery.RoleId); 
         }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
-            List<Role> roles = await _mediator.Send(new GetAllRolesQuery());
+            List<Role> roles = await _roleQueryRepository.GetAllRoles();
             return await GenerateTree(roles, roleId);
         }
         [NonAction]
