@@ -30,6 +30,11 @@ namespace HierarchyAPI.Controllers
         {
             return await _mediator.Send(updateCommand);
         }
+        [HttpDelete("DeleteByCandidate")]
+        public async Task<Role> DeleteByCandidate(DeleteByCandidateCommand deleteCommand)
+        {
+            return await _mediator.Send(deleteCommand);
+        }
         [HttpDelete("Delete")]
         public async Task<Role> Remove(DeleteCommand deleteCommand)
         {
@@ -41,7 +46,7 @@ namespace HierarchyAPI.Controllers
             return await _mediator.Send(removeRecursiveCommand);
         }
         [HttpGet("GetAllChildren")]
-        public async Task<ActionResult<List<Role>>> GetAllChildren(GetAllChildrenQuery getAllChildrenQuery)
+        public async Task<ActionResult<List<Role>>> GetAllChildren([FromForm]GetAllChildrenQuery getAllChildrenQuery)
         {
             //var children = await _mediator.Send(getAllChildrenQuery);
             var children = _roleQueryRepository.GetAllChildren(getAllChildrenQuery.guid); 
