@@ -33,6 +33,7 @@ namespace HierarchyAPI.Models.Commands
                     }
                 }
             }
+            await _roleCommandsRepository.Remove(cmd.Deleted);
             return Deleted;
         }
     }
