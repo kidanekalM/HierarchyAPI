@@ -37,7 +37,7 @@ namespace HierarchyAPI.Models.Repositories
         public async Task<Role> RemoveRecursiveNonAction(List<Role> Roles, Guid roleId)
         {
             Role toDelte = Roles.Where(r => r.Id.Equals(roleId)).FirstOrDefault();
-            List<Role> Children = Roles.Where(r => r.ParentId.Equals(roleId)).ToList();
+            List<Role> Children = Roles.Where(r => r.Parent_Id.Equals(roleId)).ToList();
             if (Children.Count != 0)
             {
                 foreach (var child in Children)
@@ -52,17 +52,17 @@ namespace HierarchyAPI.Models.Repositories
         public async Task<Role> Update(Guid roleId, Role role)
         {
             var oldRole = _OrgaContext.roles.FirstOrDefault(r => r.Id==roleId);
-            oldRole.Description = role.Description;
-            oldRole.Name = role.Name;
-            oldRole.Parent = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(oldRole.ParentId));
-            oldRole.ParentId = role.ParentId;
+            oldRole.Role_Description = role.Role_Description;
+            oldRole.Role_Name = role.Role_Name;
+            oldRole.Parent = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(oldRole.Parent_Id));
+            oldRole.Parent_Id = role.Parent_Id;
             _OrgaContext.roles.Update(oldRole);
             _OrgaContext.SaveChanges();
             return role;
         }
         public async Task<List<Role>> GetAllChildren(Guid roleId)
         {
-            return _OrgaContext.roles.Where(r => r.ParentId.Equals(roleId)).ToList();
+            return _OrgaContext.roles.Where(r => r.Parent_Id.Equals(roleId)).ToList();
         }
 
         public async Task<List<Role>> GetAllRoles()
