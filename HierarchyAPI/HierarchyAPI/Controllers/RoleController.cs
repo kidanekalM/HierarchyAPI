@@ -7,7 +7,7 @@ using HierarchyAPI.Models.Commands;
 namespace HierarchyAPI.Controllers
 {
     [ApiController]
-    [Route("/")]
+    [Route("api/[controller]")]
     public class RoleController : ControllerBase
     {
         private readonly IRoleQueryRepository _roleQueryRepository;
@@ -46,11 +46,11 @@ namespace HierarchyAPI.Controllers
             return await _mediator.Send(removeRecursiveCommand);
         }
         [HttpGet("GetAllChildren")]
-        public async Task<ActionResult<List<Role>>> GetAllChildren([FromForm]GetAllChildrenQuery getAllChildrenQuery)
+        public async Task<List<Role>> GetAllChildren([FromQuery]GetAllChildrenQuery getAllChildrenQuery)
         {
             //var children = await _mediator.Send(getAllChildrenQuery);
-            var children = _roleQueryRepository.GetAllChildren(getAllChildrenQuery.guid); 
-            return Ok(children);
+            var children = await _roleQueryRepository.GetAllChildren(getAllChildrenQuery.guid); 
+            return children;
         }
         [HttpGet("GetAllRoles")]
         public async Task<List<Role>> GetAllRoles()
