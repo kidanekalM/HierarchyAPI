@@ -13,9 +13,9 @@ namespace HierarchyAPI.Models.Queries
         }
         public async Task<List<Role>> Handle(GetAllChildrenQuery request,CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return await _repository.GetAllChildren(request.guid);
         }
-        public async Task<List<Role>> GetAllChildren(GetAllChildrenQuery request,CancellationToken cancellationToken)
+        public async Task<List<Role>> GetAllChildren(GetAllChildrenQuery request)
         {
            return await _repository.GetAllChildren(request.guid);
         }
