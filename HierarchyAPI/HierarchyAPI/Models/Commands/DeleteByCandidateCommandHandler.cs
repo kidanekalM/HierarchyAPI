@@ -31,6 +31,8 @@ namespace HierarchyAPI.Models.Commands
                         child.Parent_Id = candidate.Id;
                         await _roleCommandsRepository.Update((Guid)child.Id, child);
                     }
+                    candidate.Parent = Deleted.Parent;
+                    candidate.Parent_Id = Deleted.Parent_Id;
                 }
             }
             await _roleCommandsRepository.Remove(cmd.Deleted);
