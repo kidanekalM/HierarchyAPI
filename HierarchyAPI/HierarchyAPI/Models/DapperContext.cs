@@ -1,10 +1,12 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using HierarchyAPI.Interceptors;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System.Data;
 
 namespace HierarchyAPI.Models
 {
-    public class DapperContext
+    public class DapperContext:DbContext
     {
         private readonly IConfiguration _configuration;
         private readonly string ConnectionString;
