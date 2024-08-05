@@ -1,18 +1,14 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HierarchyAPI.Models.Repositories
 {
-    public class RoleRepository : IRoleRepository
+    public class RoleCommandsRepository:IRoleCommandsRepository
     {
         private readonly OrgaContext _OrgaContext;
-        private readonly DapperContext _DapperContext;
-        public RoleRepository(OrgaContext orgaContext, DapperContext dapperContext)
+        public RoleCommandsRepository(OrgaContext orgaContext)
         {
             _OrgaContext = orgaContext;
-            _DapperContext = dapperContext;
         }
         public async Task<Role> Insert(Role role)
         {
@@ -33,16 +29,15 @@ namespace HierarchyAPI.Models.Repositories
             _OrgaContext.SaveChanges();
             return role;
         }
-        [NonAction]
         public async Task<Role> RemoveRecursiveNonAction(List<Role> Roles, Guid roleId)
         {
-            Role toDelte = Roles.Where(r => r.Id.Equals(roleId)).FirstOrDefault();
+            Role? toDelte =  Roles.FirstOrDefault(r => r.Id.Equals(roleId));
             List<Role> Children = Roles.Where(r => r.Parent_Id.Equals(roleId)).ToList();
             if (Children.Count != 0)
             {
                 foreach (var child in Children)
                 {
-                    RemoveRecursiveNonAction(Roles, (Guid)child.Id);
+                    await RemoveRecursiveNonAction(Roles, (Guid)child.Id);
                 }
             }
             var role = Roles.FirstOrDefault(r => r.Id.Equals(roleId));
@@ -51,7 +46,7 @@ namespace HierarchyAPI.Models.Repositories
         }
         public async Task<Role> Update(Guid roleId, Role role)
         {
-            var oldRole = _OrgaContext.roles.FirstOrDefault(r => r.Id==roleId);
+            var oldRole = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(roleId));
             oldRole.Role_Description = role.Role_Description;
             oldRole.Role_Name = role.Role_Name;
             oldRole.Parent = _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(oldRole.Parent_Id));
@@ -60,30 +55,7 @@ namespace HierarchyAPI.Models.Repositories
             _OrgaContext.SaveChanges();
             return role;
         }
-        public async Task<List<Role>> GetAllChildren(Guid roleId)
-        {
-            return _OrgaContext.roles.Where(r => r.Parent_Id.Equals(roleId)).ToList();
-        }
 
-        public async Task<List<Role>> GetAllRoles()
-        {
-            return _OrgaContext.roles.ToList();
-        }
-
-        public async Task<Role> GetSingle(Guid roleId)
-        {
-            return _OrgaContext.roles.FirstOrDefault(r => r.Id.Equals(roleId));
-        }
-        public async Task<IEnumerable<Role>> GetRoles()
-        {
-            var query = "SELECT * FROM Roles";
-
-            using (var connection = _DapperContext.CreateConnection())
-            {
-                var roles = await connection.QueryAsync<Role>(query);
-                return roles.ToList();
-            }
-        }
-
+        //Add get
     }
 }
