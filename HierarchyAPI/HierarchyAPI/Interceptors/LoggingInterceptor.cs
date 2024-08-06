@@ -1,13 +1,16 @@
-﻿using Castle.DynamicProxy;
-using System.Data.Common;
-
+﻿
 namespace HierarchyAPI.Interceptors
 {
-    public class LoggingInterceptor:IInterceptor
+    public class LoggingInterceptorMiddleware:IMiddleware
     {
-        public void Intercept(IInvocation invocation)
+
+        public async Task InvokeAsync(HttpContext context,RequestDelegate next)
         {
-            Console.WriteLine(invocation.InvocationTarget.ToString() + " was invoked.");
+            Console.WriteLine(context.GetEndpoint() + " invoked.");
+            await next(context);
+            Console.WriteLine(context.GetEndpoint() + " Completed.");
+
         }
     }
+
 }
