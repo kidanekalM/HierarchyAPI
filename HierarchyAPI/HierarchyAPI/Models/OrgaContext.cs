@@ -1,7 +1,10 @@
 ﻿using HierarchyAPI.Models.Config;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Castle.DynamicProxy;
+
 using System.Security.Cryptography.X509Certificates;
+using HierarchyAPI.Interceptors;
 
 namespace HierarchyAPI.Models
 {
@@ -18,5 +21,7 @@ namespace HierarchyAPI.Models
             base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrgaContext).Assembly);  
         }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+       => optionsBuilder.AddInterceptors(new LoggingInterceptor());
     }
 }
