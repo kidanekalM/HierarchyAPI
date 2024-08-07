@@ -1,5 +1,4 @@
-﻿using HierarchyAPI.Interceptors;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 using System.Data;
