@@ -1,16 +1,22 @@
 ﻿
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using System.Data.Common;
+
 namespace HierarchyAPI.Interceptors
 {
-    public class LoggingInterceptorMiddleware:IMiddleware
+    public class LoggingInterceptor:DbCommandInterceptor
     {
 
-        public async Task InvokeAsync(HttpContext context,RequestDelegate next)
+        public override InterceptionResult<DbDataReader> ReaderExecuting(
+                DbCommand command,
+                CommandEventData eventData,
+                InterceptionResult<DbDataReader> result)
         {
-            Console.WriteLine(context.GetEndpoint() + " invoked.");
-            await next(context);
-            Console.WriteLine(context.GetEndpoint() + " Completed.");
+            Console.WriteLine("\n Executing Command at:\n"+DateTime.Now);
 
+            return result;
         }
+        
     }
 
 }
