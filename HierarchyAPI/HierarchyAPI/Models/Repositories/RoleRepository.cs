@@ -55,7 +55,14 @@ namespace HierarchyAPI.Models.Repositories
             _OrgaContext.SaveChanges();
             return role;
         }
-
+        public async Task<Role> GetSingle(Guid roleId)
+        {
+            return await _OrgaContext.roles.FirstOrDefaultAsync(r=>r.Id==roleId);
+        }
+        public async Task<List<Role>> GetAllRoles()
+        {
+            return await _OrgaContext.roles.ToListAsync();
+        }
         //Add get
     }
 }
