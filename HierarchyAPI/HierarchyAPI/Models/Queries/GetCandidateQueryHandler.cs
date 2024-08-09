@@ -3,6 +3,10 @@ using MediatR;
 
 namespace HierarchyAPI.Models.Queries
 {
+    public class GetCandidatesQuery : IRequest<List<Role>> 
+    {
+        public Guid RoleId { get; set; }
+    }
     public class GetCandidateQueryHandler:IRequestHandler<GetCandidatesQuery,List<Role>>
     {
         private readonly IRoleQueryRepository _repository;
