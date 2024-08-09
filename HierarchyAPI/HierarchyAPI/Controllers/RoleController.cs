@@ -68,38 +68,13 @@ namespace HierarchyAPI.Controllers
         [HttpGet("GetCandidate")]
         public async Task<List<Role>> GetCandidates([FromQuery]GetCandidatesQuery getCandidatesQuery)
         {
-            //return await _mediator.Send(getCandidatesQuery);
             return await _roleQueryRepository.GetCandidates(getCandidatesQuery.RoleId); 
         }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
-            List<Role> roles = await _roleQueryRepository.GetAllRoles();
-            return await GenerateTree(roles, roleId);
+            return await _roleQueryRepository.Tree(roleId);
         }
-        [NonAction]
-        public async Task<TreeNode> GenerateTree(List<Role> roles, Guid? roleId)
-        {
-            TreeNode RootNode;
-            if (roleId == null)
-            {
-                var Root = roles.Find(r => r.Parent_Id == null);
-                roleId = Root.Id;
-                RootNode = new TreeNode(Root.Id, Root.Role_Name);
-            }
-            else
-            {
-                var Root = roles.Find(r => r.Id == roleId);
-                RootNode = new TreeNode(Root.Id, Root.Role_Name);
-            }
-            List<Role> Children = roles.FindAll(r => r.Parent_Id == roleId);
-            RootNode.Children = new List<TreeNode>();
-            foreach (var child in Children)
-            {
-                TreeNode childNode = await GenerateTree(roles, (Guid)child.Id);
-                RootNode.Children.Add(childNode);
-            }
-            return RootNode;
-        }
+        
     }
 }
