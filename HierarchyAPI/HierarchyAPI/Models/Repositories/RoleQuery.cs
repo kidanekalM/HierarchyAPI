@@ -49,6 +49,33 @@ namespace HierarchyAPI.Models.Repositories
                 return children.ToList();
             }
         }
+        public async Task<TreeNode> Tree(Guid roleId)
+        {
+            return await GenerateTree(await GetAllRoles(), roleId);
+        }
+        public async Task<TreeNode> GenerateTree(List<Role> roles, Guid? roleId)
+        {
+            TreeNode RootNode;
+            if (roleId == null)
+            {
+                var Root = roles.Find(r => r.Parent_Id == null);
+                roleId = Root.Id;
+                RootNode = new TreeNode(Root.Id, Root.Role_Name);
+            }
+            else
+            {
+                var Root = roles.Find(r => r.Id == roleId);
+                RootNode = new TreeNode(Root.Id, Root.Role_Name);
+            }
+            List<Role> Children = roles.FindAll(r => r.Parent_Id == roleId);
+            RootNode.Children = new List<TreeNode>();
+            foreach (var child in Children)
+            {
+                TreeNode childNode = await GenerateTree(roles, (Guid)child.Id);
+                RootNode.Children.Add(childNode);
+            }
+            return RootNode;
+        }
 
     }
 }
