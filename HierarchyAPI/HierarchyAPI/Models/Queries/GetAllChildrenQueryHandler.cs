@@ -4,6 +4,10 @@ using MediatR;
 using System.Reflection.Metadata;
 namespace HierarchyAPI.Models.Queries
 {
+    public class GetAllChildrenQuery : IRequest<List<Role>>
+    {
+        public Guid guid { get; set; }
+    }
     public class GetAllChildrenQueryHandler:IRequestHandler<GetAllChildrenQuery, List<Role>>
     {
         private readonly Repositories.IRoleQueryRepository _repository;
