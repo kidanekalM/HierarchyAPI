@@ -3,6 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HierarchyAPI.Models.Commands
 {
+    public class RemoveRecursiveCommand : IRequest<Role>
+    {
+        public Guid RoleId { get; set; }
+    }
     public class RemoveRecursiveCommandHandler:IRequestHandler<RemoveRecursiveCommand,Role>
     {
         private readonly Repositories.IRoleCommandsRepository _repositoryCommandsRepository;
