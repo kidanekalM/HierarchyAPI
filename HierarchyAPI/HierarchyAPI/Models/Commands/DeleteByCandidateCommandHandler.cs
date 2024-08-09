@@ -3,13 +3,16 @@ using MediatR;
 
 namespace HierarchyAPI.Models.Commands
 {
+    public class DeleteByCandidateCommand : IRequest<Role>
+    {
+        public Guid Deleted { get; set; }
+        public Guid Candidate { get; set; }
+    }
     public class DeleteByCandidateCommandHandler:IRequestHandler<DeleteByCandidateCommand,Role>
     {
         private readonly IRoleCommandsRepository _roleCommandsRepository;
-        private readonly IRoleQueryRepository _roleQueryRepository;
-        public DeleteByCandidateCommandHandler(IRoleCommandsRepository roleCommandsRepository,IRoleQueryRepository roleQueryRepository)
+        public DeleteByCandidateCommandHandler(IRoleCommandsRepository roleCommandsRepository)
         {
-            _roleQueryRepository = roleQueryRepository; 
             _roleCommandsRepository = roleCommandsRepository;
         }
         public async Task<Role> Handle(DeleteByCandidateCommand command,CancellationToken cancellationToken)
@@ -18,9 +21,9 @@ namespace HierarchyAPI.Models.Commands
         }
         async Task<Role> Assign(DeleteByCandidateCommand cmd)
         {
-            var Deleted = await _roleQueryRepository.GetSingle(cmd.Deleted);
-            var candidate = await _roleQueryRepository.GetSingle(cmd.Candidate);
-            var children = await _roleQueryRepository.GetAllChildren(cmd.Deleted);
+            var Deleted = await _roleCommandsRepository.GetSingle(cmd.Deleted);
+            var candidate = await _roleCommandsRepository.GetSingle(cmd.Candidate);
+            var children = await _roleCommandsRepository.GetAllChildren(cmd.Deleted);
             if (Deleted != null)
             {
                 if (candidate != null)
