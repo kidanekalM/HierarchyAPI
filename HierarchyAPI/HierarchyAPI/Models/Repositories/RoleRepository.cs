@@ -63,6 +63,10 @@ namespace HierarchyAPI.Models.Repositories
         {
             return await _OrgaContext.roles.ToListAsync();
         }
+        public async Task<List<Role>> GetAllChildren(Guid roleId)
+        {
+            return await _OrgaContext.roles.Where(r=>r.Parent_Id==roleId).ToListAsync();
+        }
         //Add get
     }
 }
