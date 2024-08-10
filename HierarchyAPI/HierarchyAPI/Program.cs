@@ -1,6 +1,5 @@
-using HierarchyAPI.Interceptors;
-using HierarchyAPI.Models;
-using HierarchyAPI.Models.Repositories;
+using HierarchyAPI.Role_Entity.Models;
+using HierarchyAPI.Role_Entity.Models.Repositories;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;

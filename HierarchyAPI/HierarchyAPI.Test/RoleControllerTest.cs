@@ -1,6 +1,6 @@
-using HierarchyAPI.Controllers;
-using HierarchyAPI.Models;
-using HierarchyAPI.Models.Repositories;
+using HierarchyAPI.Role_Entity.Models;
+using HierarchyAPI.Role_Entity.Controllers;
+using HierarchyAPI.Role_Entity.Models.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -35,9 +35,11 @@ namespace HierarchyAPI.Test
                 Parent_Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afc4"),
                 Parent = null
             };
-            var cmd = new Models.Commands.InsertCommand()
+            var cmd = new Role_Entity.Models.Commands.InsertCommand()
             {
-                Role = newRole
+                Role_Name = "Release Manager",
+                Role_Description = "Manages Releases",
+                Parent_Id = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afc4"),
             };
             var result = await _roleController.Insert(cmd);
             Assert.Equal("", "");  
