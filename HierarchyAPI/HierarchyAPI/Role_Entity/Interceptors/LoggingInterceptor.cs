@@ -8,6 +8,7 @@ namespace HierarchyAPI.Role_Entity.Interceptors
 
         public override InterceptionResult<DbDataReader> ReaderExecuting(DbCommand command, CommandEventData eventData, InterceptionResult<DbDataReader> result)
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(command.CommandText);
             Console.WriteLine("\n Executing Command at: " + DateTime.Now);
 
