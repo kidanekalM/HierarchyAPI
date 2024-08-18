@@ -5,10 +5,10 @@ using System.Data;
 
 namespace HierarchyAPI.Role_Entity.Models
 {
-    public class DapperContext : DbContext
+    public class DapperContext
     {
         private readonly IConfiguration _configuration;
-        private readonly string ConnectionString;
+        private readonly string? ConnectionString;
         public DapperContext(IConfiguration configuration)
         {
             _configuration = configuration;
