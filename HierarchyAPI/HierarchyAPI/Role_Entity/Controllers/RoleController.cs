@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MediatR;
+using MediatR;   
 using HierarchyAPI.Role_Entity.Models;
 using HierarchyAPI.Role_Entity.Models.Commands;
 using HierarchyAPI.Role_Entity.Models.Queries;
@@ -11,13 +11,13 @@ namespace HierarchyAPI.Role_Entity.Controllers
     public class RoleController : ControllerBase
     {
         private readonly IRoleQueryRepository _roleQueryRepository;
-        private readonly IRoleCommandsRepository _roleCommandsRepository;
         private readonly IMediator _mediator;
-        public RoleController(IRoleQueryRepository roleQueryRepository, IRoleCommandsRepository roleCommandsRepository, IMediator mediator)
+        private readonly ILogger _logger;
+        public RoleController(IRoleQueryRepository roleQueryRepository, IMediator mediator,ILogger<RoleController> logger)
         {
             _roleQueryRepository = roleQueryRepository;
-            _roleCommandsRepository = roleCommandsRepository;
             _mediator = mediator;
+            _logger = logger;
         }
         //Accept cmd
         [HttpPost("Insert")]
@@ -48,31 +48,33 @@ namespace HierarchyAPI.Role_Entity.Controllers
         [HttpGet("GetAllChildren")]
         public async Task<List<Role>> GetAllChildren([FromQuery] GetAllChildrenQuery getAllChildrenQuery)
         {
-            //var children = await _mediator.Send(getAllChildrenQuery);
+            _logger.LogInformation("Query Children", DateTime.UtcNow.ToLongTimeString());
             var children = await _roleQueryRepository.GetAllChildren(getAllChildrenQuery.guid);
             return children;
         }
         [HttpGet("GetAllRoles")]
         public async Task<List<Role>> GetAllRoles()
         {
-            //var roles =  await _mediator.Send(new GetAllRolesQuery());
+            _logger.LogInformation("Reading All Roles", DateTime.UtcNow.ToLongTimeString());
             var roles = await _roleQueryRepository.GetAllRoles();
             return roles;
         }
         [HttpGet("GetSingle")]
         public async Task<Role> GetSingle([FromQuery] GetSingleQuery getSingleQuery)
         {
-            //return await _mediator.Send(getSingleQuery);
+            _logger.LogInformation("Reading Single", DateTime.UtcNow.ToLongTimeString());
             return await _roleQueryRepository.GetSingle(getSingleQuery.RoleId);
         }
         [HttpGet("GetCandidate")]
         public async Task<List<Role>> GetCandidates([FromQuery] GetCandidatesQuery getCandidatesQuery)
         {
+            _logger.LogInformation("Reading Candidates", DateTime.UtcNow.ToLongTimeString());
             return await _roleQueryRepository.GetCandidates(getCandidatesQuery.RoleId);
         }
         [HttpGet("Tree")]
         public async Task<TreeNode> Tree(Guid roleId)
         {
+            _logger.LogInformation("Reading Tree", DateTime.UtcNow.ToLongTimeString());
             return await _roleQueryRepository.Tree(roleId);
         }
 
