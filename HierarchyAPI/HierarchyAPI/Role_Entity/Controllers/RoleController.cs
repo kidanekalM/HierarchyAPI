@@ -23,26 +23,35 @@ namespace HierarchyAPI.Role_Entity.Controllers
         [HttpPost("Insert")]
         public async Task<Role> Insert(InsertCommand insertCommand)
         {
+            _logger.LogInformation("Insert Command", DateTime.UtcNow.ToLongTimeString());
+
             return await _mediator.Send(insertCommand);
         }
         [HttpPut("Update")]
         public async Task<ActionResult<Role>> Update(UpdateCommand updateCommand)
         {
+            _logger.LogInformation("Update Command", DateTime.UtcNow.ToLongTimeString());
+
             return await _mediator.Send(updateCommand);
         }
         [HttpDelete("DeleteByCandidate")]
         public async Task<Role> DeleteByCandidate(DeleteByCandidateCommand deleteCommand)
         {
+            _logger.LogInformation("Delete By Candidate Command", DateTime.UtcNow.ToLongTimeString());
+
             return await _mediator.Send(deleteCommand);
         }
         [HttpDelete("Delete")]
         public async Task<Role> Remove(DeleteCommand deleteCommand)
         {
+            _logger.LogInformation("Remove Command", DateTime.UtcNow.ToLongTimeString());
+
             return await _mediator.Send(deleteCommand);
         }
         [HttpDelete("DeleteRecursive")]
         public async Task<ActionResult<Role>> RemoveRecursive(RemoveRecursiveCommand removeRecursiveCommand)
         {
+            _logger.LogInformation("Remove Recursive Command", DateTime.UtcNow.ToLongTimeString());
             return await _mediator.Send(removeRecursiveCommand);
         }
         [HttpGet("GetAllChildren")]
