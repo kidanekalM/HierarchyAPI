@@ -1,8 +1,6 @@
 using HierarchyAPI.Role_Entity.Models;
 using HierarchyAPI.Role_Entity.Models.Repositories;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
@@ -28,8 +26,6 @@ builder.Services.AddDbContext<OrgaContext>(options => {
 var app = builder.Build();
 
 
-//app.UseMiddleware<LoggingInterceptorMiddleware>();
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
